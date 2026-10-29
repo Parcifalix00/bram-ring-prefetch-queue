@@ -56,13 +56,16 @@ SOURCE_CAP = 524288
 COMMAND_CAP = 40
 PLANNED_COMMANDS = 37
 EXPECTED_HASHED_FILES = 21
-H5_KERNEL_SHA = "d631c8b9334d34fa6adbffd5b47f601cfb097bab0d60959558e048fc380656a3"
-SENTINEL_EXPECTED = "H5_QUEUE_UNIT_PASS steps=2 banks=768 depth=512 consumed_blocks=192 old_reads=1536 all_rows_and_canaries=equal lane767=covered"
-H5_HELPER_SHA = '466256ded9b836465af591b610520bf591fe6df65b2c0bd6ab2f1da112035198'
-H5_HELPER_B64 = 'I2lmbmRlZiBORVhBX0g1X1FVRVVFX0gKI2RlZmluZSBORVhBX0g1X1FVRVVFX0gKI2luY2x1ZGUgPHN0ZGludC5oPgojaW5jbHVkZSA8aW1taW50cmluLmg+CgovKiBQcml2YXRlIEg1OiBINCBBUEksIGZpeGVkIEQ9MiwgZm91ciBzbG90czsgbm9ubmVnYXRpdmUgYmxvY2tzIG9ubHkuICovCnR5cGVkZWYgc3RydWN0IHsKICAgIHVpbnQzMl90IHF2WzRdWzhdOwogICAgdWludDMyX3QgcWFbNF1bOF07Cn0gaDRfcXVldWU7Cl9TdGF0aWNfYXNzZXJ0KHNpemVvZihoNF9xdWV1ZSkgPT0gMjU2LCAiSDUgcXVldWUgcGF5bG9hZCBtdXN0IGJlIDI1NiBieXRlcyIpOwpfU3RhdGljX2Fzc2VydChCID09IDc2OCAmJiBERVBUSCA9PSA1MTIsICJINSBnZW9tZXRyeSBtdXN0IG1hdGNoIEg0Iik7CgpzdGF0aWMgaW5saW5lIHZvaWQgaDRfZW5xdWV1ZV9ibG9jayhoNF9xdWV1ZSAqcSwgaW50IGJsb2NrLCBfX20yNTZpIHY4LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1aW50MzJfdCBiYW5rW0JdW0RFUFRIXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgdWludDMyX3QgYW1hc2tbQl0pCnsKICAgIGludCBzbG90ID0gYmxvY2sgJiAzOwogICAgX21tMjU2X3N0b3JldV9zaTI1NigoX19tMjU2aSAqKXEtPnF2W3Nsb3RdLCB2OCk7CiAgICBmb3IgKGludCBrID0gMDsgayA8IDg7IGsrKykgewogICAgICAgIGludCBiID0gYmxvY2sgKiA4ICsgazsKICAgICAgICB1bnNpZ25lZCBhID0gX3BleHRfdTMyKHEtPnF2W3Nsb3RdW2tdLCBhbWFza1tiXSk7CiAgICAgICAgcS0+cWFbc2xvdF1ba10gPSBhOwogICAgICAgIF9tbV9wcmVmZXRjaCgoY29uc3QgY2hhciAqKSZiYW5rW2JdW2FdLCBfTU1fSElOVF9UMCk7CiAgICB9Cn0KCi8qIFByZXNlcnZlIHRoZSBINCBoZWxwZXIgQVBJOyBhIHByaXZhdGUga2VybmVsIG5lZWRzIG9ubHkgYW4gaW5jbHVkZSBjaGFuZ2UuICovCnN0YXRpYyBpbmxpbmUgdm9pZCBoNF9jb25zdW1lX2Jsb2NrKGg0X3F1ZXVlICpxLCBpbnQgYmxvY2ssCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVpbnQzMl90IGJhbmtbQl1bREVQVEhdLCB1aW50MzJfdCBucmRbQl0pCnsKICAgIGludCBzbG90ID0gYmxvY2sgJiAzOwogICAgZm9yIChpbnQgayA9IDA7IGsgPCA4OyBrKyspIHsKICAgICAgICBpbnQgYiA9IGJsb2NrICogOCArIGs7CiAgICAgICAgdW5zaWduZWQgYSA9IHEtPnFhW3Nsb3RdW2tdOwogICAgICAgIHVpbnQzMl90IG9sZCA9IGJhbmtbYl1bYV07CiAgICAgICAgbnJkW2JdID0gb2xkOwogICAgICAgIGJhbmtbYl1bYV0gPSBxLT5xdltzbG90XVtrXTsKICAgIH0KfQojZW5kaWYK'
+H6_KERNEL_SHA = 'be21311882cc2f8faf7055f61fbced08f56859f9062829cbc60c917d27dd0ab4'
+SENTINEL_EXPECTED = "H6_QUEUE_UNIT_PASS steps=2 banks=768 depth=512 consumed_blocks=192 old_reads=1536 all_rows_and_canaries=equal lane767=covered"
+H6_HELPER_SHA = 'a6b0b8bd9c9cdf52ffc5348bd235712d63899a10d227833a60cebff4bbfe434d'
+H6_HELPER_B64 = 'I2lmbmRlZiBORVhBX0g2X1FVRVVFX0gKI2RlZmluZSBORVhBX0g2X1FVRVVFX0gKI2luY2x1ZGUgPHN0ZGludC5oPgojaW5jbHVkZSA8aW1taW50cmluLmg+CgovKiBQcml2YXRlIEg2OiBjb25zdW1lIGJsb2NrIGktMiBiZWZvcmUgZW5xdWV1ZSBpOyBEPTIsIHR3byBzbG90cy4gKi8KdHlwZWRlZiBzdHJ1Y3QgewogICAgdWludDMyX3QgcXZbMl1bOF07CiAgICB1aW50MzJfdCBxYVsyXVs4XTsKfSBoNF9xdWV1ZTsKX1N0YXRpY19hc3NlcnQoc2l6ZW9mKGg0X3F1ZXVlKSA9PSAxMjgsICJINiBxdWV1ZSBwYXlsb2FkIG11c3QgYmUgMTI4IGJ5dGVzIik7Cl9TdGF0aWNfYXNzZXJ0KEIgPT0gNzY4ICYmIERFUFRIID09IDUxMiwgIkg2IGdlb21ldHJ5IG11c3QgbWF0Y2ggSDQiKTsKCnN0YXRpYyBpbmxpbmUgdm9pZCBoNF9lbnF1ZXVlX2Jsb2NrKGg0X3F1ZXVlICpxLCBpbnQgYmxvY2ssIF9fbTI1NmkgdjgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVpbnQzMl90IGJhbmtbQl1bREVQVEhdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCB1aW50MzJfdCBhbWFza1tCXSkKewogICAgaW50IHNsb3QgPSBibG9jayAmIDE7CiAgICBfbW0yNTZfc3RvcmV1X3NpMjU2KChfX20yNTZpICopcS0+cXZbc2xvdF0sIHY4KTsKICAgIGZvciAoaW50IGsgPSAwOyBrIDwgODsgaysrKSB7CiAgICAgICAgaW50IGIgPSBibG9jayAqIDggKyBrOwogICAgICAgIHVuc2lnbmVkIGEgPSBfcGV4dF91MzIocS0+cXZbc2xvdF1ba10sIGFtYXNrW2JdKTsKICAgICAgICBxLT5xYVtzbG90XVtrXSA9IGE7CiAgICAgICAgX21tX3ByZWZldGNoKChjb25zdCBjaGFyICopJmJhbmtbYl1bYV0sIF9NTV9ISU5UX1QwKTsKICAgIH0KfQoKLyogTm9ubmVnYXRpdmUgYmxvY2tzOyBjYWxsZXIgbXVzdCBjb25zdW1lIGJlZm9yZSByZXVzaW5nIGVpdGhlciBzbG90LiAqLwpzdGF0aWMgaW5saW5lIHZvaWQgaDRfY29uc3VtZV9ibG9jayhoNF9xdWV1ZSAqcSwgaW50IGJsb2NrLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1aW50MzJfdCBiYW5rW0JdW0RFUFRIXSwgdWludDMyX3QgbnJkW0JdKQp7CiAgICBpbnQgc2xvdCA9IGJsb2NrICYgMTsKICAgIGZvciAoaW50IGsgPSAwOyBrIDwgODsgaysrKSB7CiAgICAgICAgaW50IGIgPSBibG9jayAqIDggKyBrOwogICAgICAgIHVuc2lnbmVkIGEgPSBxLT5xYVtzbG90XVtrXTsKICAgICAgICB1aW50MzJfdCBvbGQgPSBiYW5rW2JdW2FdOwogICAgICAgIG5yZFtiXSA9IG9sZDsKICAgICAgICBiYW5rW2JdW2FdID0gcS0+cXZbc2xvdF1ba107CiAgICB9Cn0KI2VuZGlmCg=='
 SENTINEL_ORIGINAL_SHA = '72e13ee769bec73d81798ead7c0e26033e5a9bcd74cea8bf9c52c33d0c043b92'
-SENTINEL_SHA = '78bd19dfc664f9cf89fd68876ed16e84e1d46fe1f5bf85be3c5f723f047211c2'
-SENTINEL_B64 = 'LyogQ29ycmVjdG5lc3Mgb25seTogbm8gaGFzaCwgdGltaW5nLCBub25jZSBzZWFyY2ggb3IgYmVuY2htYXJrLiAqLwojaW5jbHVkZSA8c3RkaW50Lmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlICJ0YWJsZXMuaCIKI2luY2x1ZGUgImg1X3F1ZXVlLmgiCiNkZWZpbmUgVkFMVUVfTUFTSyAoKDF1IDw8IFcpIC0gMSkKdHlwZWRlZiBzdHJ1Y3QgewogICAgdWludDMyX3QgYmVmb3JlWzE2XTsKICAgIHVpbnQzMl90IHdvcmRzW0JdW0RFUFRIXTsKICAgIHVpbnQzMl90IGFmdGVyWzE2XTsKfSBndWFyZGVkX2JhbmtzOwpzdGF0aWMgZ3VhcmRlZF9iYW5rcyBjYW5kaWRhdGUsIHJlZmVyZW5jZTsKc3RhdGljIHVpbnQzMl90IGFtYXNrW0JdLCB2YWx1ZXNbMl1bQl07CgpzdGF0aWMgdW5zaWduZWQgcmVmZXJlbmNlX3BleHQodWludDMyX3QgdmFsdWUsIHVpbnQzMl90IGJpdHMpCnsKICAgIHVuc2lnbmVkIG91dCA9IDAsIG4gPSAwOwogICAgZm9yICh1bnNpZ25lZCBpID0gMDsgaSA8IDMyOyBpKyspCiAgICAgICAgaWYgKGJpdHMgJiAoMXUgPDwgaSkpIG91dCB8PSAoKHZhbHVlID4+IGkpICYgMXUpIDw8IG4rKzsKICAgIHJldHVybiBvdXQ7Cn0KCmludCBtYWluKHZvaWQpCnsKICAgIGlmIChXICE9IDIwIHx8IEIgIT0gNzY4IHx8IERFUFRIICE9IDUxMikgcmV0dXJuIDI7CiAgICBmb3IgKHVuc2lnbmVkIGkgPSAwOyBpIDwgMTY7IGkrKykgewogICAgICAgIGNhbmRpZGF0ZS5iZWZvcmVbaV0gPSAweENBMTAwMDAwdSArIGk7CiAgICAgICAgY2FuZGlkYXRlLmFmdGVyW2ldID0gMHhDQTIwMDAwMHUgKyBpOwogICAgfQogICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICBhbWFza1tiXSA9IDB4MWZmdSA8PCAoYiAlIDEyKTsKICAgICAgICB2YWx1ZXNbMF1bYl0gPSAoMHg3MTM1YnUgXiAoKHVpbnQzMl90KWIgKiAweDllMzc3OWI5dSkpICYgVkFMVUVfTUFTSzsKICAgICAgICB2YWx1ZXNbMV1bYl0gPSAoYiAmIDEpCiAgICAgICAgICAgID8gKCgweGEyMzQ1dSBeICgodWludDMyX3QpYiAqIDB4ODVlYmNhNmJ1KSkgJiBWQUxVRV9NQVNLKQogICAgICAgICAgICA6ICh2YWx1ZXNbMF1bYl0gXiAoKH5hbWFza1tiXSkgJiBWQUxVRV9NQVNLKSk7CiAgICAgICAgZm9yIChpbnQgYSA9IDA7IGEgPCBERVBUSDsgYSsrKQogICAgICAgICAgICBjYW5kaWRhdGUud29yZHNbYl1bYV0gPSAweEE1MDAwMDAwdSBeICgodWludDMyX3QpYiAqIDB4OWUzN3UpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXiAoKHVpbnQzMl90KWEgKiAweDQ1ZDl1KTsKICAgIH0KICAgIC8qIEV4cGxpY2l0IGxlZ2FsIGZpcnN0L2xhc3QgYmFuay9yb3cgZWRnZXMsIHJlcGVhdGVkIGFjcm9zcyBib3RoIHN0ZXBzLiAqLwogICAgZm9yIChpbnQgc3RlcCA9IDA7IHN0ZXAgPCAyOyBzdGVwKyspIHsKICAgICAgICB2YWx1ZXNbc3RlcF1bMF0gJj0gfmFtYXNrWzBdOwogICAgICAgIHZhbHVlc1tzdGVwXVtCIC0gMV0gfD0gYW1hc2tbQiAtIDFdOwogICAgfQogICAgbWVtY3B5KCZyZWZlcmVuY2UsICZjYW5kaWRhdGUsIHNpemVvZiBjYW5kaWRhdGUpOwogICAgdW5zaWduZWQgY29uc3VtZWRfdG90YWwgPSAwOwogICAgZm9yIChpbnQgc3RlcCA9IDA7IHN0ZXAgPCAyOyBzdGVwKyspIHsKICAgICAgICBoNF9xdWV1ZSBxOyAvKiBEZWxpYmVyYXRlbHkgbm90IGluaXRpYWxpemVkLCBhbGwgc2xvdHMgd3JpdHRlbiBmaXJzdC4gKi8KICAgICAgICB1aW50MzJfdCBnb3Rfb2xkW0JdLCBleHBlY3RlZF9vbGRbQl0sIG5oW0IgKyAxXTsKICAgICAgICB1bnNpZ25lZCBjb25zdW1lZFtCIC8gOF0gPSB7MH07CiAgICAgICAgbWVtc2V0KGdvdF9vbGQsIDB4Q0QsIHNpemVvZiBnb3Rfb2xkKTsKICAgICAgICBtZW1zZXQobmgsIDB4RUYsIHNpemVvZiBuaCk7CiAgICAgICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICAgICAgdW5zaWduZWQgYSA9IHJlZmVyZW5jZV9wZXh0KHZhbHVlc1tzdGVwXVtiXSwgYW1hc2tbYl0pOwogICAgICAgICAgICBpZiAoYSA+PSBERVBUSCkgcmV0dXJuIDM7CiAgICAgICAgICAgIGV4cGVjdGVkX29sZFtiXSA9IHJlZmVyZW5jZS53b3Jkc1tiXVthXTsKICAgICAgICAgICAgcmVmZXJlbmNlLndvcmRzW2JdW2FdID0gdmFsdWVzW3N0ZXBdW2JdOwogICAgICAgIH0KICAgICAgICBmb3IgKGludCBibG9jayA9IDA7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgX19tMjU2aSB2OCA9IF9tbTI1Nl9sb2FkdV9zaTI1NigoY29uc3QgX19tMjU2aSAqKSZ2YWx1ZXNbc3RlcF1bOCAqIGJsb2NrXSk7CiAgICAgICAgICAgIF9tbTI1Nl9zdG9yZXVfc2kyNTYoKF9fbTI1NmkgKikmbmhbOCAqIGJsb2NrICsgMV0sIHY4KTsKICAgICAgICAgICAgaDRfZW5xdWV1ZV9ibG9jaygmcSwgYmxvY2ssIHY4LCBjYW5kaWRhdGUud29yZHMsIGFtYXNrKTsKICAgICAgICAgICAgaWYgKGJsb2NrID49IDIpIHsKICAgICAgICAgICAgICAgIGludCBqID0gYmxvY2sgLSAyOwogICAgICAgICAgICAgICAgaDRfY29uc3VtZV9ibG9jaygmcSwgaiwgY2FuZGlkYXRlLndvcmRzLCBnb3Rfb2xkKTsKICAgICAgICAgICAgICAgIGNvbnN1bWVkW2pdKys7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZm9yIChpbnQgYmxvY2sgPSBCIC8gOCAtIDI7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgaDRfY29uc3VtZV9ibG9jaygmcSwgYmxvY2ssIGNhbmRpZGF0ZS53b3JkcywgZ290X29sZCk7CiAgICAgICAgICAgIGNvbnN1bWVkW2Jsb2NrXSsrOwogICAgICAgIH0KICAgICAgICAvKiBTYW1lIG9yaWdpbmFsIGJvdW5kYXJ5LCBhZnRlciBhbGwgcGVuZGluZyBiYW5rIG9wZXJhdGlvbnMuICovCiAgICAgICAgbmhbMF0gPSBuaFtCXTsKICAgICAgICBmb3IgKGludCBibG9jayA9IDA7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgaWYgKGNvbnN1bWVkW2Jsb2NrXSAhPSAxKSByZXR1cm4gNDsKICAgICAgICAgICAgY29uc3VtZWRfdG90YWwrKzsKICAgICAgICB9CiAgICAgICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICAgICAgaWYgKGdvdF9vbGRbYl0gIT0gZXhwZWN0ZWRfb2xkW2JdKSByZXR1cm4gNTsKICAgICAgICAgICAgaWYgKG5oWyhiICsgMSkgJSBCXSAhPSB2YWx1ZXNbc3RlcF1bYl0pIHJldHVybiA2OwogICAgICAgIH0KICAgICAgICAvKiBJbmNsdWRlcyBhbGwgdW50b3VjaGVkIHJvd3MgYW5kIGJvdGggZ3VhcmQgcmVnaW9ucywgZXZlcnkgc3RlcC4gKi8KICAgICAgICBpZiAobWVtY21wKCZjYW5kaWRhdGUsICZyZWZlcmVuY2UsIHNpemVvZiBjYW5kaWRhdGUpKSByZXR1cm4gNzsKICAgIH0KICAgIGlmIChjb25zdW1lZF90b3RhbCAhPSAxOTIpIHJldHVybiA4OwogICAgcHV0cygiSDVfUVVFVUVfVU5JVF9QQVNTIHN0ZXBzPTIgYmFua3M9NzY4IGRlcHRoPTUxMiBjb25zdW1lZF9ibG9ja3M9MTkyIG9sZF9yZWFkcz0xNTM2IGFsbF9yb3dzX2FuZF9jYW5hcmllcz1lcXVhbCBsYW5lNzY3PWNvdmVyZWQiKTsKICAgIHJldHVybiAwOwp9Cg=='
+SENTINEL_SHA = '9d756004587f501197999c3853a486157e77c1b9aee7cb9e40316fd5d6136e75'
+SENTINEL_B64 = 'LyogQ29ycmVjdG5lc3Mgb25seTogbm8gaGFzaCwgdGltaW5nLCBub25jZSBzZWFyY2ggb3IgYmVuY2htYXJrLiAqLwojaW5jbHVkZSA8c3RkaW50Lmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlICJ0YWJsZXMuaCIKI2luY2x1ZGUgImg2X3F1ZXVlLmgiCiNkZWZpbmUgVkFMVUVfTUFTSyAoKDF1IDw8IFcpIC0gMSkKdHlwZWRlZiBzdHJ1Y3QgewogICAgdWludDMyX3QgYmVmb3JlWzE2XTsKICAgIHVpbnQzMl90IHdvcmRzW0JdW0RFUFRIXTsKICAgIHVpbnQzMl90IGFmdGVyWzE2XTsKfSBndWFyZGVkX2JhbmtzOwpzdGF0aWMgZ3VhcmRlZF9iYW5rcyBjYW5kaWRhdGUsIHJlZmVyZW5jZTsKc3RhdGljIHVpbnQzMl90IGFtYXNrW0JdLCB2YWx1ZXNbMl1bQl07CgpzdGF0aWMgdW5zaWduZWQgcmVmZXJlbmNlX3BleHQodWludDMyX3QgdmFsdWUsIHVpbnQzMl90IGJpdHMpCnsKICAgIHVuc2lnbmVkIG91dCA9IDAsIG4gPSAwOwogICAgZm9yICh1bnNpZ25lZCBpID0gMDsgaSA8IDMyOyBpKyspCiAgICAgICAgaWYgKGJpdHMgJiAoMXUgPDwgaSkpIG91dCB8PSAoKHZhbHVlID4+IGkpICYgMXUpIDw8IG4rKzsKICAgIHJldHVybiBvdXQ7Cn0KCmludCBtYWluKHZvaWQpCnsKICAgIGlmIChXICE9IDIwIHx8IEIgIT0gNzY4IHx8IERFUFRIICE9IDUxMikgcmV0dXJuIDI7CiAgICBmb3IgKHVuc2lnbmVkIGkgPSAwOyBpIDwgMTY7IGkrKykgewogICAgICAgIGNhbmRpZGF0ZS5iZWZvcmVbaV0gPSAweENBMTAwMDAwdSArIGk7CiAgICAgICAgY2FuZGlkYXRlLmFmdGVyW2ldID0gMHhDQTIwMDAwMHUgKyBpOwogICAgfQogICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICBhbWFza1tiXSA9IDB4MWZmdSA8PCAoYiAlIDEyKTsKICAgICAgICB2YWx1ZXNbMF1bYl0gPSAoMHg3MTM1YnUgXiAoKHVpbnQzMl90KWIgKiAweDllMzc3OWI5dSkpICYgVkFMVUVfTUFTSzsKICAgICAgICB2YWx1ZXNbMV1bYl0gPSAoYiAmIDEpCiAgICAgICAgICAgID8gKCgweGEyMzQ1dSBeICgodWludDMyX3QpYiAqIDB4ODVlYmNhNmJ1KSkgJiBWQUxVRV9NQVNLKQogICAgICAgICAgICA6ICh2YWx1ZXNbMF1bYl0gXiAoKH5hbWFza1tiXSkgJiBWQUxVRV9NQVNLKSk7CiAgICAgICAgZm9yIChpbnQgYSA9IDA7IGEgPCBERVBUSDsgYSsrKQogICAgICAgICAgICBjYW5kaWRhdGUud29yZHNbYl1bYV0gPSAweEE1MDAwMDAwdSBeICgodWludDMyX3QpYiAqIDB4OWUzN3UpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXiAoKHVpbnQzMl90KWEgKiAweDQ1ZDl1KTsKICAgIH0KICAgIC8qIEV4cGxpY2l0IGxlZ2FsIGZpcnN0L2xhc3QgYmFuay9yb3cgZWRnZXMsIHJlcGVhdGVkIGFjcm9zcyBib3RoIHN0ZXBzLiAqLwogICAgZm9yIChpbnQgc3RlcCA9IDA7IHN0ZXAgPCAyOyBzdGVwKyspIHsKICAgICAgICB2YWx1ZXNbc3RlcF1bMF0gJj0gfmFtYXNrWzBdOwogICAgICAgIHZhbHVlc1tzdGVwXVtCIC0gMV0gfD0gYW1hc2tbQiAtIDFdOwogICAgfQogICAgbWVtY3B5KCZyZWZlcmVuY2UsICZjYW5kaWRhdGUsIHNpemVvZiBjYW5kaWRhdGUpOwogICAgdW5zaWduZWQgY29uc3VtZWRfdG90YWwgPSAwOwogICAgaDRfcXVldWUgcTsgLyogVW5pbml0aWFsaXplZDsgYm90aCBzbG90cyBwZXJzaXN0IGFjcm9zcyB0aGUgdHdvIHN0ZXBzLiAqLwogICAgZm9yIChpbnQgc3RlcCA9IDA7IHN0ZXAgPCAyOyBzdGVwKyspIHsKICAgICAgICB1aW50MzJfdCBnb3Rfb2xkW0JdLCBleHBlY3RlZF9vbGRbQl0sIG5oW0IgKyAxXTsKICAgICAgICB1bnNpZ25lZCBjb25zdW1lZFtCIC8gOF0gPSB7MH07CiAgICAgICAgbWVtc2V0KGdvdF9vbGQsIDB4Q0QsIHNpemVvZiBnb3Rfb2xkKTsKICAgICAgICBtZW1zZXQobmgsIDB4RUYsIHNpemVvZiBuaCk7CiAgICAgICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICAgICAgdW5zaWduZWQgYSA9IHJlZmVyZW5jZV9wZXh0KHZhbHVlc1tzdGVwXVtiXSwgYW1hc2tbYl0pOwogICAgICAgICAgICBpZiAoYSA+PSBERVBUSCkgcmV0dXJuIDM7CiAgICAgICAgICAgIGV4cGVjdGVkX29sZFtiXSA9IHJlZmVyZW5jZS53b3Jkc1tiXVthXTsKICAgICAgICAgICAgcmVmZXJlbmNlLndvcmRzW2JdW2FdID0gdmFsdWVzW3N0ZXBdW2JdOwogICAgICAgIH0KICAgICAgICBmb3IgKGludCBibG9jayA9IDA7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgX19tMjU2aSB2OCA9IF9tbTI1Nl9sb2FkdV9zaTI1NigoY29uc3QgX19tMjU2aSAqKSZ2YWx1ZXNbc3RlcF1bOCAqIGJsb2NrXSk7CiAgICAgICAgICAgIF9tbTI1Nl9zdG9yZXVfc2kyNTYoKF9fbTI1NmkgKikmbmhbOCAqIGJsb2NrICsgMV0sIHY4KTsKICAgICAgICAgICAgaWYgKGJsb2NrID49IDIpIHsKICAgICAgICAgICAgICAgIGludCBqID0gYmxvY2sgLSAyOwogICAgICAgICAgICAgICAgaDRfY29uc3VtZV9ibG9jaygmcSwgaiwgY2FuZGlkYXRlLndvcmRzLCBnb3Rfb2xkKTsKICAgICAgICAgICAgICAgIGNvbnN1bWVkW2pdKys7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgaDRfZW5xdWV1ZV9ibG9jaygmcSwgYmxvY2ssIHY4LCBjYW5kaWRhdGUud29yZHMsIGFtYXNrKTsKICAgICAgICB9CiAgICAgICAgZm9yIChpbnQgYmxvY2sgPSBCIC8gOCAtIDI7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgaDRfY29uc3VtZV9ibG9jaygmcSwgYmxvY2ssIGNhbmRpZGF0ZS53b3JkcywgZ290X29sZCk7CiAgICAgICAgICAgIGNvbnN1bWVkW2Jsb2NrXSsrOwogICAgICAgIH0KICAgICAgICAvKiBTYW1lIG9yaWdpbmFsIGJvdW5kYXJ5LCBhZnRlciBhbGwgcGVuZGluZyBiYW5rIG9wZXJhdGlvbnMuICovCiAgICAgICAgbmhbMF0gPSBuaFtCXTsKICAgICAgICBmb3IgKGludCBibG9jayA9IDA7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgaWYgKGNvbnN1bWVkW2Jsb2NrXSAhPSAxKSByZXR1cm4gNDsKICAgICAgICAgICAgY29uc3VtZWRfdG90YWwrKzsKICAgICAgICB9CiAgICAgICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICAgICAgaWYgKGdvdF9vbGRbYl0gIT0gZXhwZWN0ZWRfb2xkW2JdKSByZXR1cm4gNTsKICAgICAgICAgICAgaWYgKG5oWyhiICsgMSkgJSBCXSAhPSB2YWx1ZXNbc3RlcF1bYl0pIHJldHVybiA2OwogICAgICAgIH0KICAgICAgICAvKiBJbmNsdWRlcyBhbGwgdW50b3VjaGVkIHJvd3MgYW5kIGJvdGggZ3VhcmQgcmVnaW9ucywgZXZlcnkgc3RlcC4gKi8KICAgICAgICBpZiAobWVtY21wKCZjYW5kaWRhdGUsICZyZWZlcmVuY2UsIHNpemVvZiBjYW5kaWRhdGUpKSByZXR1cm4gNzsKICAgIH0KICAgIGlmIChjb25zdW1lZF90b3RhbCAhPSAxOTIpIHJldHVybiA4OwogICAgcHV0cygiSDZfUVVFVUVfVU5JVF9QQVNTIHN0ZXBzPTIgYmFua3M9NzY4IGRlcHRoPTUxMiBjb25zdW1lZF9ibG9ja3M9MTkyIG9sZF9yZWFkcz0xNTM2IGFsbF9yb3dzX2FuZF9jYW5hcmllcz1lcXVhbCBsYW5lNzY3PWNvdmVyZWQiKTsKICAgIHJldHVybiAwOwp9Cg=='
+
+KERNEL_ORDER_BEFORE = b'                int block = b0 / 8;\n                h4_enqueue_block(&queue, block, v8, bank, AMASK);\n                if (block >= 2)\n                    h4_consume_block(&queue, block - 2, bank, nrd);'
+KERNEL_ORDER_AFTER = b'                int block = b0 / 8;\n                if (block >= 2)\n                    h4_consume_block(&queue, block - 2, bank, nrd);\n                h4_enqueue_block(&queue, block, v8, bank, AMASK);'
 
 
 def require(condition, reason):
@@ -394,6 +397,15 @@ class Budget:
         return rec["stdout"]
 
 
+def derive_h6_kernel(h4_body):
+    require(h4_body.count(b'#include "h4_queue.h"') == 1, "H4_INCLUDE_COUNT")
+    require(h4_body.count(KERNEL_ORDER_BEFORE) == 1, "H4_RUN_ORDER_COUNT")
+    body = h4_body.replace(b'#include "h4_queue.h"', b'#include "h6_queue.h"', 1)
+    body = body.replace(KERNEL_ORDER_BEFORE, KERNEL_ORDER_AFTER, 1)
+    require(hashlib.sha256(body).hexdigest() == H6_KERNEL_SHA, "H6_EXACT_KERNEL_HASH")
+    return body
+
+
 def execute():
     require(os.environ.get("GITHUB_ACTIONS") == "true", "MANUAL_GITHUB_ACTIONS_ONLY")
     require(os.environ.get("GITHUB_REPOSITORY") == REPO, "REPOSITORY_GUARD")
@@ -411,7 +423,7 @@ def execute():
     require(run_id.isdecimal(), "RUN_ID_GUARD")
     workspace = Path(os.environ["GITHUB_WORKSPACE"]).resolve()
     require(Path(__file__).resolve() == workspace / "tools" / "portability_probe.py", "SCRIPT_PATH_GUARD")
-    folder = workspace / "work" / ("three-arm-run-" + run_id)
+    folder = workspace / "work" / ("h6-three-arm-run-" + run_id)
     folder.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
     rows, failure, budget, expected_paths = [], None, None, {}
@@ -432,7 +444,7 @@ def execute():
                              "per_child_wall_seconds": 60, "cpu_reserve_seconds": CPU_RESERVE,
                              "command_cap": COMMAND_CAP, "planned_commands": PLANNED_COMMANDS,
                              "assembly_stdout_bytes_each": ASM_OUTPUT_CAP},
-                    "comparison": "A original baseline, B exact H4, C H5 same D2 four-slot helper",
+                    "comparison": "A original baseline, B exact H4, C H6 D2 two-slot consume-first helper",
                     "official_reference_or_prize_result": False,
                     "licence": "MIT; Copyright (c) 2026 Peter Rizun; repository LICENSE retained"}
         require('ID=ubuntu' in metadata["os_release"] and 'VERSION_ID="24.04"' in metadata["os_release"],
@@ -448,7 +460,7 @@ def execute():
         fetch_exact(UPSTREAM_URL, baseline, BASELINE_SHA, started)
         expected_paths[baseline] = BASELINE_SHA
         # All network acquisition ends here; fixed embedded/derived bytes follow.
-        for name, blob, digest in (("h5_queue.h", H5_HELPER_B64, H5_HELPER_SHA),
+        for name, blob, digest in (("h6_queue.h", H6_HELPER_B64, H6_HELPER_SHA),
                                     ("queue_unit.c", SENTINEL_B64, SENTINEL_SHA)):
             body = base64.b64decode(blob, validate=True)
             require(hashlib.sha256(body).hexdigest() == digest, "EMBEDDED_SOURCE_HASH_MISMATCH")
@@ -458,14 +470,12 @@ def execute():
             emit("embedded_source", {"path": str(path.relative_to(workspace)), "sha256": digest,
                                      "bytes": len(body), "licence": "MIT"})
         h4_body = (source / "cpu/h4_kernel.c").read_bytes()
-        require(h4_body.count(b'#include "h4_queue.h"') == 1, "H4_INCLUDE_COUNT")
-        h5_body = h4_body.replace(b'#include "h4_queue.h"', b'#include "h5_queue.h"')
-        require(hashlib.sha256(h5_body).hexdigest() == H5_KERNEL_SHA, "H5_INCLUDE_ONLY_KERNEL_HASH")
-        h5_kernel = source / "cpu/h5_kernel.c"
-        h5_kernel.write_bytes(h5_body)
-        expected_paths[h5_kernel] = H5_KERNEL_SHA
-        emit("derived_source", {"path": str(h5_kernel.relative_to(workspace)),
-                                "sha256": H5_KERNEL_SHA, "only_change": "H5 helper include"})
+        h6_body = derive_h6_kernel(h4_body)
+        h6_kernel = source / "cpu/h6_kernel.c"
+        h6_kernel.write_bytes(h6_body)
+        expected_paths[h6_kernel] = H6_KERNEL_SHA
+        emit("derived_source", {"path": str(h6_kernel.relative_to(workspace)),
+                                "sha256": H6_KERNEL_SHA, "only_changes": ["H6 helper include", "consume i-2 before enqueue i"]})
         golden = parse_vectors((source / "vectors.txt").read_text())
         budget = Budget(folder, host["selected_one_per_guest_core"], started)
         compiler, objdump = "/usr/bin/gcc-13", "/usr/bin/objdump"
@@ -474,7 +484,7 @@ def execute():
         version = budget.run("compiler-version", [compiler, "--version"], source)
         require(re.search(r"\b13\.\d", version) is not None, "GCC13_VERSION_GUARD")
         binaries = {}
-        for variant, kernel in (("A", "baseline_kernel.c"), ("B", "h4_kernel.c"), ("C", "h5_kernel.c")):
+        for variant, kernel in (("A", "baseline_kernel.c"), ("B", "h4_kernel.c"), ("C", "h6_kernel.c")):
             exe = folder / ("driver-" + variant)
             argv = [compiler, "-O3", "-march=native", "-fopenmp",
                     '-DSOURCE_FILE="' + kernel + '"', "driver.c", "sha256.c", "-o", str(exe)]
@@ -494,12 +504,12 @@ def execute():
                                  "columns": ["nonce", "SHA256", "fold", "full_state"],
                                  "sha_abc_control": True})
         proofs_passed = True
-        unit_exe = folder / "h5-queue-unit"
-        budget.run("build-H5-sentinel", [compiler, "-O3", "-march=native", "-fopenmp",
+        unit_exe = folder / "h6-queue-unit"
+        budget.run("build-H6-sentinel", [compiler, "-O3", "-march=native", "-fopenmp",
                                         "queue_unit.c", "-o", str(unit_exe)], source / "cpu")
         expected_paths[unit_exe] = sha(unit_exe)
-        unit_output = budget.run("run-H5-sentinel", [str(unit_exe)], folder)
-        require(unit_output.strip() == SENTINEL_EXPECTED, "H5_SENTINEL_OUTPUT_MISMATCH")
+        unit_output = budget.run("run-H6-sentinel", [str(unit_exe)], folder)
+        require(unit_output.strip() == SENTINEL_EXPECTED, "H6_SENTINEL_OUTPUT_MISMATCH")
         sentinel_passed = True
         emit("sentinel", {"passed": True, "source_sha256": SENTINEL_SHA,
                           "binary_sha256": sha(unit_exe), "full_output": unit_output})
@@ -547,7 +557,7 @@ def execute():
         failure = "DESCRIPTIVE_QUALITY_OR_PREFLIGHT_FAILURE_NO_RETRY"
     result = {"status": "COMPLETED_MEASUREMENTS_PENDING_ROOT_ASSEMBLY_REVIEW" if valid else "STOP_NO_RETRY",
               "failure": failure, "metadata": metadata,
-              "three_full_proofs_and_SHA_passed": proofs_passed, "H5_sentinel_passed": sentinel_passed,
+              "three_full_proofs_and_SHA_passed": proofs_passed, "H6_sentinel_passed": sentinel_passed,
               "assembly_captured": assembly_captured, "assembly": assembly_records,
               "assembly_semantic_review_status": "PENDING_ROOT_REVIEW" if assembly_captured else "NOT_AVAILABLE",
               "speedup_or_causal_conclusion": "NOT_ADJUDICATED_BY_AUTOMATION",
@@ -559,7 +569,7 @@ def execute():
               "controller_wall_seconds": time.monotonic() - started,
               "effective_measurement_valid": valid, "automatic_retry": False,
               "interpretation": "All samples retained. Descriptive engineering numerics, not confidence intervals. "
-                  "Root must inspect actual B/C assembly and all logs before interpreting speed or modulo savings. "
+                  "Root must inspect actual B/C assembly and all logs before interpreting speed, consume/enqueue order, v8 spills, prefetch placement or stack changes. "
                   "Only this guest and original baseline; no physical P-core, current-champion, i7-12700KF, "
                   "official threshold, award or income inference. Partial, failed or noisy batches are invalid."}
     save(folder / "result.json", result)
