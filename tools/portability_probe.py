@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""One manually approved, finite offline pilot; no mining or networked kernel work.
+"""One manually approved, finite offline three-arm pilot; no mining or networked kernel work.
+Embedded C sources derive from the project MIT distribution.
+Copyright (c) 2026 Peter Rizun; the repository LICENSE remains applicable.
 
 This file is inert on import. The only network activity is a fixed, hash-checked
 source acquisition before compilation. It never installs tools or retries work.
 """
 import argparse
+import base64
 import hashlib
 import json
 import math
@@ -40,13 +43,26 @@ SOURCE_HASHES = {
 SHA_ABC = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
 WORK = "init+fill+run+serialize+SHA256+consume"
 COUNT = 800
-SCHEDULE = [("warmup", v) for v in "AB"] + [("aa", "A")] * 2 + [
-    ("main", v) for v in "ABBABAAB"]
+MAIN_TRIPLETS = ("ABC", "BCA", "CAB", "CBA", "BAC", "ACB")
+SCHEDULE = [("warmup", v) for v in "ABC"] + [("aa", "A")] * 2 + [
+    ("main", v) for triplet in MAIN_TRIPLETS for v in triplet]
+COMPARISONS = (("B", "A"), ("C", "A"), ("C", "B"))
 CPU_CAP = 900.0
 WALL_CAP = 400.0
 CPU_RESERVE = 4.0
 OUTPUT_CAP = 131072
+ASM_OUTPUT_CAP = 524288
 SOURCE_CAP = 524288
+COMMAND_CAP = 40
+PLANNED_COMMANDS = 37
+EXPECTED_HASHED_FILES = 21
+H5_KERNEL_SHA = "d631c8b9334d34fa6adbffd5b47f601cfb097bab0d60959558e048fc380656a3"
+SENTINEL_EXPECTED = "H5_QUEUE_UNIT_PASS steps=2 banks=768 depth=512 consumed_blocks=192 old_reads=1536 all_rows_and_canaries=equal lane767=covered"
+H5_HELPER_SHA = '466256ded9b836465af591b610520bf591fe6df65b2c0bd6ab2f1da112035198'
+H5_HELPER_B64 = 'I2lmbmRlZiBORVhBX0g1X1FVRVVFX0gKI2RlZmluZSBORVhBX0g1X1FVRVVFX0gKI2luY2x1ZGUgPHN0ZGludC5oPgojaW5jbHVkZSA8aW1taW50cmluLmg+CgovKiBQcml2YXRlIEg1OiBINCBBUEksIGZpeGVkIEQ9MiwgZm91ciBzbG90czsgbm9ubmVnYXRpdmUgYmxvY2tzIG9ubHkuICovCnR5cGVkZWYgc3RydWN0IHsKICAgIHVpbnQzMl90IHF2WzRdWzhdOwogICAgdWludDMyX3QgcWFbNF1bOF07Cn0gaDRfcXVldWU7Cl9TdGF0aWNfYXNzZXJ0KHNpemVvZihoNF9xdWV1ZSkgPT0gMjU2LCAiSDUgcXVldWUgcGF5bG9hZCBtdXN0IGJlIDI1NiBieXRlcyIpOwpfU3RhdGljX2Fzc2VydChCID09IDc2OCAmJiBERVBUSCA9PSA1MTIsICJINSBnZW9tZXRyeSBtdXN0IG1hdGNoIEg0Iik7CgpzdGF0aWMgaW5saW5lIHZvaWQgaDRfZW5xdWV1ZV9ibG9jayhoNF9xdWV1ZSAqcSwgaW50IGJsb2NrLCBfX20yNTZpIHY4LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1aW50MzJfdCBiYW5rW0JdW0RFUFRIXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgdWludDMyX3QgYW1hc2tbQl0pCnsKICAgIGludCBzbG90ID0gYmxvY2sgJiAzOwogICAgX21tMjU2X3N0b3JldV9zaTI1NigoX19tMjU2aSAqKXEtPnF2W3Nsb3RdLCB2OCk7CiAgICBmb3IgKGludCBrID0gMDsgayA8IDg7IGsrKykgewogICAgICAgIGludCBiID0gYmxvY2sgKiA4ICsgazsKICAgICAgICB1bnNpZ25lZCBhID0gX3BleHRfdTMyKHEtPnF2W3Nsb3RdW2tdLCBhbWFza1tiXSk7CiAgICAgICAgcS0+cWFbc2xvdF1ba10gPSBhOwogICAgICAgIF9tbV9wcmVmZXRjaCgoY29uc3QgY2hhciAqKSZiYW5rW2JdW2FdLCBfTU1fSElOVF9UMCk7CiAgICB9Cn0KCi8qIFByZXNlcnZlIHRoZSBINCBoZWxwZXIgQVBJOyBhIHByaXZhdGUga2VybmVsIG5lZWRzIG9ubHkgYW4gaW5jbHVkZSBjaGFuZ2UuICovCnN0YXRpYyBpbmxpbmUgdm9pZCBoNF9jb25zdW1lX2Jsb2NrKGg0X3F1ZXVlICpxLCBpbnQgYmxvY2ssCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVpbnQzMl90IGJhbmtbQl1bREVQVEhdLCB1aW50MzJfdCBucmRbQl0pCnsKICAgIGludCBzbG90ID0gYmxvY2sgJiAzOwogICAgZm9yIChpbnQgayA9IDA7IGsgPCA4OyBrKyspIHsKICAgICAgICBpbnQgYiA9IGJsb2NrICogOCArIGs7CiAgICAgICAgdW5zaWduZWQgYSA9IHEtPnFhW3Nsb3RdW2tdOwogICAgICAgIHVpbnQzMl90IG9sZCA9IGJhbmtbYl1bYV07CiAgICAgICAgbnJkW2JdID0gb2xkOwogICAgICAgIGJhbmtbYl1bYV0gPSBxLT5xdltzbG90XVtrXTsKICAgIH0KfQojZW5kaWYK'
+SENTINEL_ORIGINAL_SHA = '72e13ee769bec73d81798ead7c0e26033e5a9bcd74cea8bf9c52c33d0c043b92'
+SENTINEL_SHA = '78bd19dfc664f9cf89fd68876ed16e84e1d46fe1f5bf85be3c5f723f047211c2'
+SENTINEL_B64 = 'LyogQ29ycmVjdG5lc3Mgb25seTogbm8gaGFzaCwgdGltaW5nLCBub25jZSBzZWFyY2ggb3IgYmVuY2htYXJrLiAqLwojaW5jbHVkZSA8c3RkaW50Lmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlICJ0YWJsZXMuaCIKI2luY2x1ZGUgImg1X3F1ZXVlLmgiCiNkZWZpbmUgVkFMVUVfTUFTSyAoKDF1IDw8IFcpIC0gMSkKdHlwZWRlZiBzdHJ1Y3QgewogICAgdWludDMyX3QgYmVmb3JlWzE2XTsKICAgIHVpbnQzMl90IHdvcmRzW0JdW0RFUFRIXTsKICAgIHVpbnQzMl90IGFmdGVyWzE2XTsKfSBndWFyZGVkX2JhbmtzOwpzdGF0aWMgZ3VhcmRlZF9iYW5rcyBjYW5kaWRhdGUsIHJlZmVyZW5jZTsKc3RhdGljIHVpbnQzMl90IGFtYXNrW0JdLCB2YWx1ZXNbMl1bQl07CgpzdGF0aWMgdW5zaWduZWQgcmVmZXJlbmNlX3BleHQodWludDMyX3QgdmFsdWUsIHVpbnQzMl90IGJpdHMpCnsKICAgIHVuc2lnbmVkIG91dCA9IDAsIG4gPSAwOwogICAgZm9yICh1bnNpZ25lZCBpID0gMDsgaSA8IDMyOyBpKyspCiAgICAgICAgaWYgKGJpdHMgJiAoMXUgPDwgaSkpIG91dCB8PSAoKHZhbHVlID4+IGkpICYgMXUpIDw8IG4rKzsKICAgIHJldHVybiBvdXQ7Cn0KCmludCBtYWluKHZvaWQpCnsKICAgIGlmIChXICE9IDIwIHx8IEIgIT0gNzY4IHx8IERFUFRIICE9IDUxMikgcmV0dXJuIDI7CiAgICBmb3IgKHVuc2lnbmVkIGkgPSAwOyBpIDwgMTY7IGkrKykgewogICAgICAgIGNhbmRpZGF0ZS5iZWZvcmVbaV0gPSAweENBMTAwMDAwdSArIGk7CiAgICAgICAgY2FuZGlkYXRlLmFmdGVyW2ldID0gMHhDQTIwMDAwMHUgKyBpOwogICAgfQogICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICBhbWFza1tiXSA9IDB4MWZmdSA8PCAoYiAlIDEyKTsKICAgICAgICB2YWx1ZXNbMF1bYl0gPSAoMHg3MTM1YnUgXiAoKHVpbnQzMl90KWIgKiAweDllMzc3OWI5dSkpICYgVkFMVUVfTUFTSzsKICAgICAgICB2YWx1ZXNbMV1bYl0gPSAoYiAmIDEpCiAgICAgICAgICAgID8gKCgweGEyMzQ1dSBeICgodWludDMyX3QpYiAqIDB4ODVlYmNhNmJ1KSkgJiBWQUxVRV9NQVNLKQogICAgICAgICAgICA6ICh2YWx1ZXNbMF1bYl0gXiAoKH5hbWFza1tiXSkgJiBWQUxVRV9NQVNLKSk7CiAgICAgICAgZm9yIChpbnQgYSA9IDA7IGEgPCBERVBUSDsgYSsrKQogICAgICAgICAgICBjYW5kaWRhdGUud29yZHNbYl1bYV0gPSAweEE1MDAwMDAwdSBeICgodWludDMyX3QpYiAqIDB4OWUzN3UpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXiAoKHVpbnQzMl90KWEgKiAweDQ1ZDl1KTsKICAgIH0KICAgIC8qIEV4cGxpY2l0IGxlZ2FsIGZpcnN0L2xhc3QgYmFuay9yb3cgZWRnZXMsIHJlcGVhdGVkIGFjcm9zcyBib3RoIHN0ZXBzLiAqLwogICAgZm9yIChpbnQgc3RlcCA9IDA7IHN0ZXAgPCAyOyBzdGVwKyspIHsKICAgICAgICB2YWx1ZXNbc3RlcF1bMF0gJj0gfmFtYXNrWzBdOwogICAgICAgIHZhbHVlc1tzdGVwXVtCIC0gMV0gfD0gYW1hc2tbQiAtIDFdOwogICAgfQogICAgbWVtY3B5KCZyZWZlcmVuY2UsICZjYW5kaWRhdGUsIHNpemVvZiBjYW5kaWRhdGUpOwogICAgdW5zaWduZWQgY29uc3VtZWRfdG90YWwgPSAwOwogICAgZm9yIChpbnQgc3RlcCA9IDA7IHN0ZXAgPCAyOyBzdGVwKyspIHsKICAgICAgICBoNF9xdWV1ZSBxOyAvKiBEZWxpYmVyYXRlbHkgbm90IGluaXRpYWxpemVkLCBhbGwgc2xvdHMgd3JpdHRlbiBmaXJzdC4gKi8KICAgICAgICB1aW50MzJfdCBnb3Rfb2xkW0JdLCBleHBlY3RlZF9vbGRbQl0sIG5oW0IgKyAxXTsKICAgICAgICB1bnNpZ25lZCBjb25zdW1lZFtCIC8gOF0gPSB7MH07CiAgICAgICAgbWVtc2V0KGdvdF9vbGQsIDB4Q0QsIHNpemVvZiBnb3Rfb2xkKTsKICAgICAgICBtZW1zZXQobmgsIDB4RUYsIHNpemVvZiBuaCk7CiAgICAgICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICAgICAgdW5zaWduZWQgYSA9IHJlZmVyZW5jZV9wZXh0KHZhbHVlc1tzdGVwXVtiXSwgYW1hc2tbYl0pOwogICAgICAgICAgICBpZiAoYSA+PSBERVBUSCkgcmV0dXJuIDM7CiAgICAgICAgICAgIGV4cGVjdGVkX29sZFtiXSA9IHJlZmVyZW5jZS53b3Jkc1tiXVthXTsKICAgICAgICAgICAgcmVmZXJlbmNlLndvcmRzW2JdW2FdID0gdmFsdWVzW3N0ZXBdW2JdOwogICAgICAgIH0KICAgICAgICBmb3IgKGludCBibG9jayA9IDA7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgX19tMjU2aSB2OCA9IF9tbTI1Nl9sb2FkdV9zaTI1NigoY29uc3QgX19tMjU2aSAqKSZ2YWx1ZXNbc3RlcF1bOCAqIGJsb2NrXSk7CiAgICAgICAgICAgIF9tbTI1Nl9zdG9yZXVfc2kyNTYoKF9fbTI1NmkgKikmbmhbOCAqIGJsb2NrICsgMV0sIHY4KTsKICAgICAgICAgICAgaDRfZW5xdWV1ZV9ibG9jaygmcSwgYmxvY2ssIHY4LCBjYW5kaWRhdGUud29yZHMsIGFtYXNrKTsKICAgICAgICAgICAgaWYgKGJsb2NrID49IDIpIHsKICAgICAgICAgICAgICAgIGludCBqID0gYmxvY2sgLSAyOwogICAgICAgICAgICAgICAgaDRfY29uc3VtZV9ibG9jaygmcSwgaiwgY2FuZGlkYXRlLndvcmRzLCBnb3Rfb2xkKTsKICAgICAgICAgICAgICAgIGNvbnN1bWVkW2pdKys7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZm9yIChpbnQgYmxvY2sgPSBCIC8gOCAtIDI7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgaDRfY29uc3VtZV9ibG9jaygmcSwgYmxvY2ssIGNhbmRpZGF0ZS53b3JkcywgZ290X29sZCk7CiAgICAgICAgICAgIGNvbnN1bWVkW2Jsb2NrXSsrOwogICAgICAgIH0KICAgICAgICAvKiBTYW1lIG9yaWdpbmFsIGJvdW5kYXJ5LCBhZnRlciBhbGwgcGVuZGluZyBiYW5rIG9wZXJhdGlvbnMuICovCiAgICAgICAgbmhbMF0gPSBuaFtCXTsKICAgICAgICBmb3IgKGludCBibG9jayA9IDA7IGJsb2NrIDwgQiAvIDg7IGJsb2NrKyspIHsKICAgICAgICAgICAgaWYgKGNvbnN1bWVkW2Jsb2NrXSAhPSAxKSByZXR1cm4gNDsKICAgICAgICAgICAgY29uc3VtZWRfdG90YWwrKzsKICAgICAgICB9CiAgICAgICAgZm9yIChpbnQgYiA9IDA7IGIgPCBCOyBiKyspIHsKICAgICAgICAgICAgaWYgKGdvdF9vbGRbYl0gIT0gZXhwZWN0ZWRfb2xkW2JdKSByZXR1cm4gNTsKICAgICAgICAgICAgaWYgKG5oWyhiICsgMSkgJSBCXSAhPSB2YWx1ZXNbc3RlcF1bYl0pIHJldHVybiA2OwogICAgICAgIH0KICAgICAgICAvKiBJbmNsdWRlcyBhbGwgdW50b3VjaGVkIHJvd3MgYW5kIGJvdGggZ3VhcmQgcmVnaW9ucywgZXZlcnkgc3RlcC4gKi8KICAgICAgICBpZiAobWVtY21wKCZjYW5kaWRhdGUsICZyZWZlcmVuY2UsIHNpemVvZiBjYW5kaWRhdGUpKSByZXR1cm4gNzsKICAgIH0KICAgIGlmIChjb25zdW1lZF90b3RhbCAhPSAxOTIpIHJldHVybiA4OwogICAgcHV0cygiSDVfUVVFVUVfVU5JVF9QQVNTIHN0ZXBzPTIgYmFua3M9NzY4IGRlcHRoPTUxMiBjb25zdW1lZF9ibG9ja3M9MTkyIG9sZF9yZWFkcz0xNTM2IGFsbF9yb3dzX2FuZF9jYW5hcmllcz1lcXVhbCBsYW5lNzY3PWNvdmVyZWQiKTsKICAgIHJldHVybiAwOwp9Cg=='
 
 
 def require(condition, reason):
@@ -82,10 +98,15 @@ def parse_vectors(raw):
     return result
 
 
+def valid_rate(value):
+    return (isinstance(value, (int, float)) and not isinstance(value, bool)
+            and math.isfinite(value) and value > 0)
+
+
 def aa_preflight(rows):
-    rates = [r["rate_hps"] for r in rows if r["phase"] == "aa"]
-    if len(rates) != 2:
-        return {"complete": False, "passed": False}
+    rates = [r.get("rate_hps") for r in rows if r.get("phase") == "aa"]
+    if len(rates) != 2 or not all(valid_rate(r) for r in rates):
+        return {"complete": len(rates) == 2, "passed": False, "invalid_or_incomplete": True}
     difference = abs(rates[1] - rates[0]) / statistics.mean(rates)
     return {"complete": True, "rates_hps": rates,
             "symmetric_relative_difference": difference, "limit": 0.05,
@@ -93,42 +114,81 @@ def aa_preflight(rows):
 
 
 def analysis(rows):
-    main = [r for r in rows if r["phase"] == "main"]
-    rates = {v: [r["rate_hps"] for r in main if r["variant"] == v] for v in "AB"}
-    complete = ([(r["phase"], r["variant"]) for r in rows] == SCHEDULE
-                and all(math.isfinite(r["rate_hps"]) and r["rate_hps"] > 0 for r in rows))
+    main = [r for r in rows if r.get("phase") == "main"]
+    rates = {v: [r.get("rate_hps") for r in main if r.get("variant") == v] for v in "ABC"}
+    complete = ([(r.get("phase"), r.get("variant")) for r in rows] == SCHEDULE
+                and all(valid_rate(r.get("rate_hps")) for r in rows))
     result = {"complete": complete, "completed_main_runs": len(main),
               "all_main_rates_hps": rates, "aa_preflight": aa_preflight(rows)}
     if not complete:
         return result
-    means = {v: statistics.mean(rates[v]) for v in "AB"}
-    cvs = {v: statistics.stdev(rates[v]) / means[v] for v in "AB"}
-    pairs = []
-    for i in range(0, 8, 2):
-        pair = main[i:i + 2]
-        a = next(r["rate_hps"] for r in pair if r["variant"] == "A")
-        b = next(r["rate_hps"] for r in pair if r["variant"] == "B")
-        pairs.append({"pair": i // 2 + 1, "orientation": "".join(r["variant"] for r in pair),
-                      "b_over_a": b / a, "gain_pp": 100 * (b / a - 1)})
-    orientations = {s: statistics.mean(p["gain_pp"] for p in pairs if p["orientation"] == s)
-                    for s in ("AB", "BA")}
-    halves = []
-    for part in (main[:4], main[4:]):
-        a = statistics.mean(r["rate_hps"] for r in part if r["variant"] == "A")
-        b = statistics.mean(r["rate_hps"] for r in part if r["variant"] == "B")
-        halves.append(100 * (b / a - 1))
-    gates = {
-        "aa_relative_difference_at_most_5pct": result["aa_preflight"]["passed"],
-        "orientation_difference_at_most_5pp": abs(orientations["AB"] - orientations["BA"]) <= 5,
-        "half_session_gain_drift_at_most_5pp": abs(halves[1] - halves[0]) <= 5,
-        "sample_cv_each_at_most_10pct": max(cvs.values()) <= 0.10,
-    }
-    result.update({"arithmetic_mean_hps_all_four_runs_each": means,
-                   "primary_gain_percent": 100 * (means["B"] / means["A"] - 1),
-                   "sample_cv": cvs, "paired_ratios": pairs,
-                   "orientation_mean_gain_pp": orientations, "half_session_gain_pp": halves,
-                   "quality_gates": gates, "quality_pass": all(gates.values())})
+    means = {v: statistics.mean(rates[v]) for v in "ABC"}
+    cvs = {v: statistics.stdev(rates[v]) / means[v] for v in "ABC"}
+    triplets = [main[i:i + 3] for i in range(0, 18, 3)]
+    comparisons = {}
+    gates = {"aa_relative_difference_at_most_5pct": result["aa_preflight"]["passed"],
+             "sample_cv_each_at_most_10pct": max(cvs.values()) <= 0.10}
+    for numerator, denominator in COMPARISONS:
+        key = numerator + "_over_" + denominator
+        forward = denominator + "_before_" + numerator
+        reverse = numerator + "_before_" + denominator
+        pairs = []
+        for index, triplet in enumerate(triplets, 1):
+            order = "".join(r["variant"] for r in triplet)
+            values = {r["variant"]: r["rate_hps"] for r in triplet}
+            ratio = values[numerator] / values[denominator]
+            orientation = forward if order.index(denominator) < order.index(numerator) else reverse
+            pairs.append({"triplet": index, "order": order, "orientation": orientation,
+                          "ratio": ratio, "gain_pp": 100 * (ratio - 1)})
+        orientations = {orientation: statistics.mean(p["gain_pp"] for p in pairs
+                                                    if p["orientation"] == orientation)
+                        for orientation in (forward, reverse)}
+        halves = []
+        for part in (main[:9], main[9:]):
+            n = statistics.mean(r["rate_hps"] for r in part if r["variant"] == numerator)
+            d = statistics.mean(r["rate_hps"] for r in part if r["variant"] == denominator)
+            halves.append(100 * (n / d - 1))
+        gap = abs(orientations[forward] - orientations[reverse])
+        drift = abs(halves[1] - halves[0])
+        comparisons[key] = {"ratio_of_all_six_arithmetic_means": means[numerator] / means[denominator],
+                            "gain_percent": 100 * (means[numerator] / means[denominator] - 1),
+                            "all_six_triplet_ratios": pairs,
+                            "orientation_mean_gain_pp": orientations,
+                            "orientation_gap_pp": gap, "half_session_gain_pp": halves,
+                            "half_session_gain_drift_pp": drift}
+        gates[key + "_orientation_gap_at_most_5pp"] = gap <= 5
+        gates[key + "_half_session_drift_at_most_5pp"] = drift <= 5
+    result.update({"arithmetic_mean_hps_all_six_runs_each": means,
+                   "sample_cv": cvs, "comparisons": comparisons,
+                   "quality_gates": gates, "quality_pass": all(gates.values()),
+                   "interpretation": "Descriptive numerics only; actual B/C assembly and all logs require root review."})
     return result
+
+
+def parse_driver(raw, threads):
+    driver = json.loads(raw)
+    require(isinstance(driver, dict), "DRIVER_NOT_OBJECT")
+    require(driver.get("mode") == "bounded_complete_digest"
+            and type(driver.get("count")) is int and driver["count"] == COUNT
+            and type(driver.get("threads")) is int and driver["threads"] == threads
+            and driver.get("first_nonce_hex") == "0000000000000000"
+            and driver.get("work") == WORK and driver.get("rate_claim") is False,
+            "DRIVER_METADATA_MISMATCH")
+    require(valid_rate(driver.get("wall_seconds")), "INVALID_INTERNAL_WALL")
+    require(isinstance(driver.get("checksum_hex"), str)
+            and re.fullmatch(r"[0-9a-f]{16}", driver["checksum_hex"]) is not None,
+            "INVALID_CHECKSUM_FORMAT")
+    return driver
+
+
+def validate_assembly(raw):
+    require(re.search(r"^[0-9a-fA-F]+ <hash_state>:$", raw, re.M) is not None,
+            "HASH_STATE_SYMBOL_UNAVAILABLE_STOP")
+    require(re.search(r"^\s*[0-9a-fA-F]+:\s+(?:[0-9a-fA-F]{2}\s+)+", raw, re.M) is not None,
+            "HASH_STATE_INSTRUCTIONS_UNAVAILABLE_STOP")
+    # Presence is a capture gate only, never a modulo or memory-order proof.
+    return {"symbol": "hash_state", "capture_nonempty": True,
+            "semantic_review": "PENDING_ROOT_REVIEW_NO_AUTOMATIC_MODULO_OR_ORDER_CLAIM"}
 
 
 def effective_valid(failure, stats, correctness_passed, hashes_ok):
@@ -255,11 +315,12 @@ class Budget:
                     "OMP_DYNAMIC": "FALSE", "OMP_PROC_BIND": "close",
                     "OMP_PLACES": ",".join("{" + str(c) + "}" for c in affinity)}
 
-    def run(self, label, argv, cwd, per_child_wall=60):
+    def run(self, label, argv, cwd, per_child_wall=60, stdout_cap=OUTPUT_CAP):
         remaining = CPU_CAP - self.total_cpu - CPU_RESERVE
         wall_remaining = WALL_CAP - (time.monotonic() - self.started)
         require(remaining >= 1 and wall_remaining > 0, "TOTAL_BUDGET_STOP")
-        require(len(self.commands) < 24, "COMMAND_COUNT_CAP")
+        require(len(self.commands) < COMMAND_CAP, "COMMAND_COUNT_CAP")
+        require(stdout_cap in (OUTPUT_CAP, ASM_OUTPUT_CAP), "UNAPPROVED_STDOUT_CAP")
         stdout_path, stderr_path = self.folder / (label + ".stdout"), self.folder / (label + ".stderr")
 
         def setup():
@@ -284,7 +345,7 @@ class Budget:
                         reason = "WALL_CAP"
                     if self.total_cpu + group_live_cpu(proc.pid) >= CPU_CAP - CPU_RESERVE:
                         reason = "TOTAL_CPU_CAP_RESERVE"
-                    if max(stdout_path.stat().st_size, stderr_path.stat().st_size) > OUTPUT_CAP:
+                    if stdout_path.stat().st_size > stdout_cap or stderr_path.stat().st_size > OUTPUT_CAP:
                         reason = "OUTPUT_CAP"
                     if reason:
                         os.killpg(proc.pid, signal.SIGKILL)
@@ -312,16 +373,17 @@ class Budget:
         self.total_cpu += cpu
         raw = stdout_path.read_bytes()
         error = stderr_path.read_bytes()
-        bounded = len(raw) <= OUTPUT_CAP and len(error) <= OUTPUT_CAP
+        bounded = len(raw) <= stdout_cap and len(error) <= OUTPUT_CAP
         rec = {"label": label, "argv": argv, "returncode": proc.returncode,
                "stop_reason": reason, "outer_wall_seconds": time.monotonic() - begin,
                "child_user_cpu_seconds": usage.ru_utime, "child_system_cpu_seconds": usage.ru_stime,
                "child_cpu_seconds": cpu, "cumulative_child_cpu_seconds": self.total_cpu,
                "voluntary_context_switches": usage.ru_nvcsw,
                "involuntary_context_switches": usage.ru_nivcsw,
-               "stdout": raw[:OUTPUT_CAP].decode("utf-8", errors="replace"),
+               "stdout": raw[:stdout_cap].decode("utf-8", errors="replace"),
                "stderr": error[:OUTPUT_CAP].decode("utf-8", errors="replace"),
-               "output_complete": bounded, "affinity": self.affinity,
+               "output_complete": bounded, "stdout_cap_bytes": stdout_cap,
+               "stdout_sha256": hashlib.sha256(raw).hexdigest(), "affinity": self.affinity,
                "omp_environment": {k: v for k, v in self.env.items() if k.startswith("OMP_")}}
         self.commands.append(rec)
         emit("command", rec)
@@ -349,27 +411,30 @@ def execute():
     require(run_id.isdecimal(), "RUN_ID_GUARD")
     workspace = Path(os.environ["GITHUB_WORKSPACE"]).resolve()
     require(Path(__file__).resolve() == workspace / "tools" / "portability_probe.py", "SCRIPT_PATH_GUARD")
-    folder = workspace / "work" / ("portability-run-" + run_id)
+    folder = workspace / "work" / ("three-arm-run-" + run_id)
     folder.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
-    rows, correctness, failure, budget, expected_paths = [], False, None, None, {}
-    stats, metadata = {}, {}
+    rows, failure, budget, expected_paths = [], None, None, {}
+    proofs_passed, sentinel_passed, assembly_captured = False, False, False
+    stats, metadata, assembly_records = {}, {}, {}
     expected_paths[Path(__file__).resolve()] = sha(Path(__file__))
-    expected_paths[workspace / ".github/workflows/portability.yml"] = sha(
-        workspace / ".github/workflows/portability.yml")
+    workflow_path = workspace / ".github/workflows/portability.yml"
+    expected_paths[workflow_path] = sha(workflow_path)
     save(folder / "started.json", {"workflow_commit": workflow_sha, "run_id": run_id,
                                    "probe_sha256": sha(Path(__file__)), "automatic_retry": False})
     try:
         host = topology()
         metadata = {"workflow_commit": workflow_sha, "probe_sha256": sha(Path(__file__)),
-                    "workflow_sha256": sha(workspace / ".github/workflows/portability.yml"),
-                    "run_id": run_id, "run_attempt": 1, "topology": host,
-                    "os_release": Path("/etc/os-release").read_text(),
+                    "workflow_sha256": sha(workflow_path), "run_id": run_id, "run_attempt": 1,
+                    "topology": host, "os_release": Path("/etc/os-release").read_text(),
                     "source_commit": SOURCE_COMMIT, "upstream_commit": UPSTREAM_COMMIT,
                     "caps": {"child_cpu_seconds": CPU_CAP, "controller_wall_seconds": WALL_CAP,
-                             "per_child_wall_seconds": 60, "cpu_reserve_seconds": CPU_RESERVE},
-                    "comparison": "B fixed H4 versus A original upstream baseline, not current champion",
-                    "official_reference_or_prize_result": False}
+                             "per_child_wall_seconds": 60, "cpu_reserve_seconds": CPU_RESERVE,
+                             "command_cap": COMMAND_CAP, "planned_commands": PLANNED_COMMANDS,
+                             "assembly_stdout_bytes_each": ASM_OUTPUT_CAP},
+                    "comparison": "A original baseline, B exact H4, C H5 same D2 four-slot helper",
+                    "official_reference_or_prize_result": False,
+                    "licence": "MIT; Copyright (c) 2026 Peter Rizun; repository LICENSE retained"}
         require('ID=ubuntu' in metadata["os_release"] and 'VERSION_ID="24.04"' in metadata["os_release"],
                 "UBUNTU_24_04_ONLY")
         emit("environment", metadata)
@@ -382,15 +447,34 @@ def execute():
         baseline = source / "cpu/baseline_kernel.c"
         fetch_exact(UPSTREAM_URL, baseline, BASELINE_SHA, started)
         expected_paths[baseline] = BASELINE_SHA
-        # All source acquisition ends here; no network functions are used below.
+        # All network acquisition ends here; fixed embedded/derived bytes follow.
+        for name, blob, digest in (("h5_queue.h", H5_HELPER_B64, H5_HELPER_SHA),
+                                    ("queue_unit.c", SENTINEL_B64, SENTINEL_SHA)):
+            body = base64.b64decode(blob, validate=True)
+            require(hashlib.sha256(body).hexdigest() == digest, "EMBEDDED_SOURCE_HASH_MISMATCH")
+            path = source / "cpu" / name
+            path.write_bytes(body)
+            expected_paths[path] = digest
+            emit("embedded_source", {"path": str(path.relative_to(workspace)), "sha256": digest,
+                                     "bytes": len(body), "licence": "MIT"})
+        h4_body = (source / "cpu/h4_kernel.c").read_bytes()
+        require(h4_body.count(b'#include "h4_queue.h"') == 1, "H4_INCLUDE_COUNT")
+        h5_body = h4_body.replace(b'#include "h4_queue.h"', b'#include "h5_queue.h"')
+        require(hashlib.sha256(h5_body).hexdigest() == H5_KERNEL_SHA, "H5_INCLUDE_ONLY_KERNEL_HASH")
+        h5_kernel = source / "cpu/h5_kernel.c"
+        h5_kernel.write_bytes(h5_body)
+        expected_paths[h5_kernel] = H5_KERNEL_SHA
+        emit("derived_source", {"path": str(h5_kernel.relative_to(workspace)),
+                                "sha256": H5_KERNEL_SHA, "only_change": "H5 helper include"})
         golden = parse_vectors((source / "vectors.txt").read_text())
         budget = Budget(folder, host["selected_one_per_guest_core"], started)
-        compiler = "/usr/bin/gcc-13"
+        compiler, objdump = "/usr/bin/gcc-13", "/usr/bin/objdump"
         require(Path(compiler).is_file(), "GCC13_NOT_INSTALLED_STOP_NO_INSTALL")
+        require(Path(objdump).is_file(), "OBJDUMP_NOT_INSTALLED_STOP_NO_INSTALL")
         version = budget.run("compiler-version", [compiler, "--version"], source)
         require(re.search(r"\b13\.\d", version) is not None, "GCC13_VERSION_GUARD")
         binaries = {}
-        for variant, kernel in (("A", "baseline_kernel.c"), ("B", "h4_kernel.c")):
+        for variant, kernel in (("A", "baseline_kernel.c"), ("B", "h4_kernel.c"), ("C", "h5_kernel.c")):
             exe = folder / ("driver-" + variant)
             argv = [compiler, "-O3", "-march=native", "-fopenmp",
                     '-DSOURCE_FILE="' + kernel + '"', "driver.c", "sha256.c", "-o", str(exe)]
@@ -399,7 +483,7 @@ def execute():
             expected_paths[exe] = sha(exe)
         emit("binary_binding", {v: {"path": str(p.relative_to(workspace)), "sha256": sha(p)}
                                 for v, p in binaries.items()})
-        for variant in "AB":
+        for variant in "ABC":
             exe = binaries[variant]
             control = budget.run("sha-control-" + variant, [str(exe), "sha-control"], folder)
             require(control.strip() == SHA_ABC, "SHA_CONTROL_MISMATCH")
@@ -409,33 +493,46 @@ def execute():
             emit("correctness", {"variant": variant, "full_vectors_passed": 8,
                                  "columns": ["nonce", "SHA256", "fold", "full_state"],
                                  "sha_abc_control": True})
-        correctness = True
+        proofs_passed = True
+        unit_exe = folder / "h5-queue-unit"
+        budget.run("build-H5-sentinel", [compiler, "-O3", "-march=native", "-fopenmp",
+                                        "queue_unit.c", "-o", str(unit_exe)], source / "cpu")
+        expected_paths[unit_exe] = sha(unit_exe)
+        unit_output = budget.run("run-H5-sentinel", [str(unit_exe)], folder)
+        require(unit_output.strip() == SENTINEL_EXPECTED, "H5_SENTINEL_OUTPUT_MISMATCH")
+        sentinel_passed = True
+        emit("sentinel", {"passed": True, "source_sha256": SENTINEL_SHA,
+                          "binary_sha256": sha(unit_exe), "full_output": unit_output})
+        for variant in "BC":
+            label = "native-hash-state-" + variant
+            raw = budget.run(label, [objdump, "-d", "-M", "intel", "--disassemble=hash_state",
+                                     str(binaries[variant])], folder, stdout_cap=ASM_OUTPUT_CAP)
+            record = validate_assembly(raw)
+            assembly_file = folder / (label + ".stdout")
+            expected_paths[assembly_file] = sha(assembly_file)
+            record.update({"variant": variant, "binary_sha256": sha(binaries[variant]),
+                           "stdout_sha256": sha(assembly_file), "stdout_bytes": assembly_file.stat().st_size,
+                           "stdout_path": str(assembly_file.relative_to(workspace))})
+            assembly_records[variant] = record
+            emit("assembly_capture", record)
+        assembly_captured = set(assembly_records) == {"B", "C"}
         checksum = None
         for index, (phase, variant) in enumerate(SCHEDULE, 1):
             raw = budget.run("%02d-%s-%s" % (index, phase, variant),
                              [str(binaries[variant]), "bench", str(COUNT), str(host["threads"]),
                               "0000000000000000"], folder)
-            driver = json.loads(raw)
-            require(driver.get("mode") == "bounded_complete_digest" and driver.get("count") == COUNT
-                    and driver.get("threads") == host["threads"]
-                    and driver.get("first_nonce_hex") == "0000000000000000"
-                    and driver.get("work") == WORK and driver.get("rate_claim") is False,
-                    "DRIVER_METADATA_MISMATCH")
-            seconds = driver.get("wall_seconds")
-            require(isinstance(seconds, (int, float)) and not isinstance(seconds, bool)
-                    and math.isfinite(seconds) and seconds > 0, "INVALID_INTERNAL_WALL")
-            require(re.fullmatch(r"[0-9a-f]{16}", driver.get("checksum_hex", "")) is not None,
-                    "INVALID_CHECKSUM_FORMAT")
+            driver = parse_driver(raw, host["threads"])
             if checksum is None:
                 checksum = driver["checksum_hex"]
             require(driver["checksum_hex"] == checksum, "CROSS_RUN_OR_VARIANT_CHECKSUM_MISMATCH")
             row = {"index": index, "phase": phase, "variant": variant, "count": COUNT,
                    "first_nonce_hex": "0000000000000000", "epoch": "epoch0",
-                   "driver": driver, "rate_hps": COUNT / seconds}
+                   "driver": driver, "rate_hps": COUNT / driver["wall_seconds"]}
             rows.append(row)
             emit("measurement", row)
             if phase == "aa" and aa_preflight(rows)["complete"]:
                 require(aa_preflight(rows)["passed"], "AA_NOISE_STOP_BEFORE_MAIN_NO_RETRY")
+        require(len(budget.commands) == PLANNED_COMMANDS, "PLANNED_COMMAND_COUNT_MISMATCH")
     except Exception as error:
         failure = type(error).__name__ + ": " + str(error)
     changed = [str(p.relative_to(workspace)) for p, digest in expected_paths.items()
@@ -443,32 +540,41 @@ def execute():
     if changed:
         failure = "POST_RUN_HASH_FAILURE: " + repr(changed)
     stats = analysis(rows)
-    hashes_ok = not changed and len(expected_paths) == len(SOURCE_HASHES) + 5
-    valid = effective_valid(failure, stats, correctness, hashes_ok)
+    hashes_ok = not changed and len(expected_paths) == EXPECTED_HASHED_FILES
+    preflight_passed = proofs_passed and sentinel_passed and assembly_captured
+    valid = effective_valid(failure, stats, preflight_passed, hashes_ok)
     if failure is None and not valid:
-        failure = "DESCRIPTIVE_QUALITY_GATE_FAILURE_NO_RETRY"
-    result = {"status": "COMPLETED_PORTABILITY_ONLY" if valid else "STOP_NO_RETRY",
-              "failure": failure, "metadata": metadata, "correctness_passed": correctness,
-              "source_and_binary_hashes_verified_after": hashes_ok, "changed_inputs": changed,
-              "source_and_binary_sha256": {str(p.relative_to(workspace)): h for p, h in expected_paths.items()},
+        failure = "DESCRIPTIVE_QUALITY_OR_PREFLIGHT_FAILURE_NO_RETRY"
+    result = {"status": "COMPLETED_MEASUREMENTS_PENDING_ROOT_ASSEMBLY_REVIEW" if valid else "STOP_NO_RETRY",
+              "failure": failure, "metadata": metadata,
+              "three_full_proofs_and_SHA_passed": proofs_passed, "H5_sentinel_passed": sentinel_passed,
+              "assembly_captured": assembly_captured, "assembly": assembly_records,
+              "assembly_semantic_review_status": "PENDING_ROOT_REVIEW" if assembly_captured else "NOT_AVAILABLE",
+              "speedup_or_causal_conclusion": "NOT_ADJUDICATED_BY_AUTOMATION",
+              "source_binary_and_capture_hashes_verified_after": hashes_ok, "changed_inputs": changed,
+              "source_binary_and_capture_sha256": {str(p.relative_to(workspace)): h for p, h in expected_paths.items()},
               "commands": budget.commands if budget else [], "runs": rows, "analysis": stats,
+              "child_commands": len(budget.commands) if budget else 0,
               "child_cpu_seconds": budget.total_cpu if budget else 0.0,
               "controller_wall_seconds": time.monotonic() - started,
-              "effective_comparison_valid": valid, "automatic_retry": False,
-              "interpretation": "All samples retained. Descriptive engineering gates, not confidence intervals. "
-                  "Only this guest host and original baseline; no physical P-core, current-champion, "
-                  "i7-12700KF, official threshold, award or income inference. "
-                  "Partial, failed or noisy runs are not valid gains."}
+              "effective_measurement_valid": valid, "automatic_retry": False,
+              "interpretation": "All samples retained. Descriptive engineering numerics, not confidence intervals. "
+                  "Root must inspect actual B/C assembly and all logs before interpreting speed or modulo savings. "
+                  "Only this guest and original baseline; no physical P-core, current-champion, i7-12700KF, "
+                  "official threshold, award or income inference. Partial, failed or noisy batches are invalid."}
     save(folder / "result.json", result)
     emit("result", result)
     summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
     require(summary_path.resolve().is_relative_to(Path(os.environ["RUNNER_TEMP"]).resolve()),
             "SUMMARY_PATH_OUTSIDE_RUNNER_TEMP")
-    summary = "## Finite offline portability pilot\n\nStatus: **" + result["status"] + "**\n\n"
-    summary += "Complete main samples: " + str(stats.get("completed_main_runs", 0)) + "/8.\n\n"
+    summary = "## Finite offline three-arm pilot\n\nStatus: **" + result["status"] + "**\n\n"
+    summary += "Complete main samples: " + str(stats.get("completed_main_runs", 0)) + "/18.\n\n"
     if valid:
-        summary += "Descriptive gain against the original baseline: %.6f%%.\n\n" % stats["primary_gain_percent"]
-    summary += result["interpretation"] + "\n\nRaw commands, outputs, hashes and all estimators are in the job log.\n"
+        summary += "Provisional descriptive ratios of arithmetic means, root review pending:\n\n"
+        for key, comparison in stats["comparisons"].items():
+            summary += "- " + key + ": %.6f%% relative difference.\n" % comparison["gain_percent"]
+        summary += "\n"
+    summary += result["interpretation"] + "\n\nRaw commands, assembly, outputs, hashes and all estimators are in the job log.\n"
     summary_path.write_text(summary, encoding="utf-8")
     return 0 if valid else 1
 
