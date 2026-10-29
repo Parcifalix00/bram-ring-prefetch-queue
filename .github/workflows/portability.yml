@@ -1,4 +1,4 @@
-name: Finite offline portability pilot
+name: Finite offline three-arm pilot
 on:
   workflow_dispatch:
 permissions: {}
@@ -37,10 +37,10 @@ jobs:
             https://github.com/Parcifalix00/bram-ring-prefetch-queue.git "$GITHUB_SHA"
           git -c core.hooksPath=/dev/null checkout --quiet --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-      - name: Run one finite offline correctness and portability comparison
+      - name: Run one finite offline three-arm correctness and comparison
         shell: bash
         run: |
           set -euo pipefail
           cd "$GITHUB_WORKSPACE"
-          test "$(sha256sum tools/portability_probe.py | cut -d ' ' -f1)" = '34dfb7343512198acd6891dace3e7232767726e9205c4a45ee2a648cac4d2610'
+          test "$(sha256sum tools/portability_probe.py | cut -d ' ' -f1)" = 'cf29f1c9684c17841df705cfc789aaba2878d79fe3637bc304f84a99025ffcc7'
           python3 -B tools/portability_probe.py --run-approved-manual-pilot
