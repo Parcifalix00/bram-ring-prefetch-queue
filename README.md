@@ -6,8 +6,8 @@ controlled local check. All eight published vectors passed on every column,
 and the SHA-256 abc control passed. The resulting binary SHA-256 was
 `d365c1fd8ab72f298953b15f6d07b2b99c82d68e8b9128ed1d1a068f43c4b2fb`,
 identical to the candidate used for the earlier local speed comparison.
-This revision changes documentation only. There is no reference-machine
-performance result, prize qualification, public commit or claim.
+The implementation files match the locally tested candidate. No
+reference-machine performance result or prize qualification is asserted.
 
 ## Source and algorithm
 
