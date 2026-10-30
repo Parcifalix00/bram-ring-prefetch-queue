@@ -1,3 +1,157 @@
+# BRAM-ring: H6 consume-first CPU candidate
+
+H6 retains the complete per-nonce fill, run, state serialization and SHA-256
+work. It uses two queue slots (128 payload bytes) and consumes block `i-2`
+before enqueueing block `i`, retaining a nominal two-block delay. Bank widths,
+tap tables, evaluator, specification and logical bank operations are unchanged.
+The historical H4 documentation is retained verbatim below.
+
+## Build H6 and check all published vectors
+
+Run these commands from the package root on the intended Linux x86-64 host
+with AVX2/BMI2 and existing GCC 13/OpenMP tools. The shared driver is unchanged.
+It includes `SOURCE_FILE` and has no default kernel selector. The shell single
+quotes below preserve the double quotes required by the C include operand.
+
+```sh
+(
+  cd cpu
+  gcc-13 -O3 -march=native -fopenmp '-DSOURCE_FILE="h6_kernel.c"' \
+      driver.c sha256.c -o h6_driver
+)
+./cpu/h6_driver sha-control
+./cpu/h6_driver vectors vectors.txt > h6-vectors.txt
+python3 -B host/check_vectors.py h6-vectors.txt vectors.txt
+```
+
+The SHA control must print
+`ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad`.
+The checker must report all eight nonces, digests, folds and full states
+bit-exact. Its first file argument is our output; the second is the golden
+reference. Build natively on each host; do not reuse `-march=native` binaries
+on another CPU. These package instructions were checked statically during
+assembly of this source tree, without another build or benchmark.
+
+## Two completed AMD guest batches
+
+Both fixed jobs compared the frozen original baseline, unchanged H4 and exact
+H6 in one session. Each selected two distinct reported guest cores from four
+vCPUs, used 800 complete hashes per timing run and six balanced main samples
+per arm, and retained every sample. Rates were not pooled across hosts.
+
+| Reported guest CPU | Job | H6/original, ratio of means | H6/H4, ratio of means |
+| --- | --- | --- | --- |
+| AMD EPYC 9V74 | [first batch](https://github.com/Parcifalix00/bram-ring-prefetch-queue/actions/runs/40971265977) | +12.231010% | +3.496671% |
+| AMD EPYC 7763 | [replication](https://github.com/Parcifalix00/bram-ring-prefetch-queue/actions/runs/40972608143) | +12.400295% | +5.289601% |
+
+Each job passed all three eight-vector proofs and SHA controls, the two-step
+H6 shared-helper sentinel, source/binary/capture bindings, native assembly
+review and its descriptive stability gates. All six H6/H4 triplet ratios
+exceeded one in each job. In the first job, one H6/original triplet gain was
+8.160695%, below 10%; five of six exceeded 10%. All six exceeded 10% in the
+second job. A ratio of arithmetic means does not promise every run exceeds
+that threshold. Native binary bindings come from the job logs; the binary
+bytes were not independently downloaded.
+
+These are two-thread guest measurements against the frozen original,
+not a verified current-champion comparison or proof of physical placement.
+They are not an official i7-12700KF eight-P-core result. The fixed samples and
+descriptive gates provide no statistical-confidence or award guarantee.
+
+## Additional correctness and Intel timing limit
+
+An offline Intel i7-8565U guest check with two reported cores passed H6's
+eight complete published vectors, eight complete independently generated
+fresh-seed vectors, both SHA controls and the shared-helper sentinel.
+Source and result integrity checks passed. The independent fixture was
+generated from the unchanged definition, not from H6 and not supplied by
+the organiser.
+
+That Intel timing session's descriptive ratio of means was +14.922101%
+against the frozen original. It failed the preset stability requirement:
+half-session gain drift was 5.322717 percentage points, above the 5-point
+limit. The timing is retained as a failed-quality observation and does not
+establish a reliable Intel gain. It must not be pooled with the AMD batches.
+No future organiser-issued fresh-seed challenge has been completed.
+
+## Complete-work benchmark entry point
+
+The unchanged driver accepts `bench 800 8 0000000000000000`, verifies the
+actual thread count, disables dynamic OpenMP and consumes each full SHA-256
+result. Per-nonce initialization, fill, run, serialization, SHA-256 and
+checksum consumption are inside its timer; one-time table preparation is
+outside it. This assembled tree has not been tested on eight physical cores.
+
+Only after verifying that the target topology and allowed affinity really
+match the sponsor's documented eight P-core logical IDs, the illustrative
+command is:
+
+```sh
+OMP_NUM_THREADS=8 OMP_THREAD_LIMIT=8 OMP_DYNAMIC=FALSE \
+OMP_PROC_BIND=close OMP_PLACES='{0},{2},{4},{6},{8},{10},{12},{14}' \
+taskset -c 0,2,4,6,8,10,12,14 \
+./cpu/h6_driver bench 800 8 0000000000000000
+```
+
+Do not apply that CPU list to an unverified host. Thread support does not
+prove physical P-core placement. The JSON reports count, actual threads,
+nonce, checksum and wall time; rate is count divided by wall time. The
+official comparison requires the actual current champion and the applicable
+organiser protocol. This package does not perform that official comparison.
+
+## Future organiser seed
+
+For a future supplied seed, preserve this frozen tree and use a separate
+authorised scratch copy. The unchanged generator emits all eight full vectors
+and CPU/FPGA tables and can be expensive; do not truncate it or substitute a
+candidate-generated oracle. This is a prospective recipe, not a completed
+organiser challenge:
+
+```sh
+scratch=../h6-fresh-proof
+test ! -e "$scratch" || exit 1
+mkdir "$scratch"
+cp -R cpu host spec.py generate.py vectors.txt LICENSE README.md "$scratch/"
+mkdir "$scratch/fpga"
+(
+  cd "$scratch"
+  BRAM_EPOCH='ORGANISER_SUPPLIED_SEED' PYTHONDONTWRITEBYTECODE=1 python3 -B generate.py
+  (
+    cd cpu
+    gcc-13 -O3 -march=native -fopenmp '-DSOURCE_FILE="h6_kernel.c"' \
+        driver.c sha256.c -o h6_driver
+  )
+  ./cpu/h6_driver sha-control
+  ./cpu/h6_driver vectors vectors.txt > h6-vectors.txt
+  python3 -B host/check_vectors.py h6-vectors.txt vectors.txt
+)
+```
+
+Replace the placeholder with the exact supplied seed. A fresh-seed correctness
+proof is separate from speed, which the recorded jobs measured on epoch0.
+
+## Source identity and licence
+
+| File | SHA-256 |
+| --- | --- |
+| `cpu/h6_kernel.c` | `be21311882cc2f8faf7055f61fbced08f56859f9062829cbc60c917d27dd0ab4` |
+| `cpu/h6_queue.h` | `a6b0b8bd9c9cdf52ffc5348bd235712d63899a10d227833a60cebff4bbfe434d` |
+
+The retained workflow and probe are unchanged. They pin H4 source commit
+`4099956f2abc9398a0049ec658e3598a312b6761`, derive H6 using the reviewed
+include and consume/enqueue changes, and verify these H6 hashes. Adding the
+standalone H6 sources does not change that fixed experiment.
+
+The exact MIT `LICENSE` and original copyright notice are retained.
+No award, income, hardware-efficiency qualification or current-champion
+result is asserted.
+
+---
+
+## Historical H4 documentation (retained verbatim)
+
+The following commands, source descriptions and results refer to H4.
+
 # BRAM-ring: two-block prefetch queue candidate
 
 This is an unreleased CPU implementation candidate. On 29 October 2026, the
